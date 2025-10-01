@@ -27,15 +27,30 @@ async function carregarTabela() {
                     <button>
                         <a href="editar.html?id=${a.id}">Editar</a>
                     </button>
-                    <button>
-                        <a href="excluir.html?id=${a.id}">Excluir</a>
-                    </button>
+                    <button onclick="deletarAluno(${a.id})">Deletar</button>
                 </td>
             </tr>`
         ).join("");
-        // }, 2000) // 5 segundos
     } catch (erro) {
         console.log(erro.message)
     }
 }
 carregarTabela()
+
+async function deletarAluno(id) {
+    if (!confirm("Tem certeza que deseja deletar este aluno?")) {
+        return;
+    }
+    try {
+        const resposta = await fetch(`${API}/${id}`, {
+            method: "DELETE"
+        });
+        if (resposta.ok) {
+            alert("Aluno deletado com sucesso!");
+            carregarTabela();
+        }
+    } catch (erro) {
+        console.log(erro.message);
+        alert("Erro ao deletar aluno. Tente novamente.");
+    }
+}

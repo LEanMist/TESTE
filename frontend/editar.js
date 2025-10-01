@@ -5,9 +5,8 @@ console.log("ID do aluno para editar ", id)
 const inputID = document.getElementById("id");
 inputID.value = id;
 
-const botaoenviar = document.getElementById("btn-enviar");
-
 const API = "http://localhost:3000/alunos"
+
 
 async function carregarAluno()
 {
@@ -31,7 +30,41 @@ async function carregarAluno()
 
 carregarAluno();
 
-botaoenviar.onclick = async (evento) => {
-}
+const form_edicao = document.getElementById("form-edicao")
+
+form_edicao.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    const nome = document.getElementById("nome").value.trim()
+    const cpf = document.getElementById("cpf").value.trim()
+    const cep = document.getElementById("cep").value.trim()
+    const uf = document.getElementById("uf").value.trim()   
+    const rua = document.getElementById("rua").value.trim()
+    const numero = document.getElementById("numero").value.trim()
+    const complemento = document.getElementById("complemento").value.trim()
+    const alunoAtualizado = { nome, cpf, cep, uf, rua, numero, complemento }
+
+    try {
+        const resposta = await fetch(`${API}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(alunoAtualizado)
+        })
+        if (resposta.ok) {
+            const dados = await resposta.json();
+            console.log("Aluno atualizado com sucesso:", dados);
+            alert("Aluno atualizado com sucesso!");
+            window.location.href = "index.html"; // Redireciona para a página inicial
+        } else {
+            console.error("Erro ao atualizar aluno:", resposta.statusText);
+            alert("Erro ao atualizar aluno. Tente novamente.");
+        } 
+    } catch (erro) {
+        console.error("Erro na requisição:", erro);
+        alert("Erro na requisição. Tente novamente.");
+    }
+})
+    
+
+
 
 
